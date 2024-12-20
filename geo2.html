@@ -3,97 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Map of India</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Interactive Map</title>
+    
+    <link 
+        rel="stylesheet" 
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
     <style>
-        /* Styling for the map */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        h1 {
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            margin: 0;
-            text-align: center;
-        }
-
+        
         #map {
-            height: 100vh;
+            height: 100vh; 
             width: 100%;
-        }
-
-        /* Optional: Style for the coordinates alert box */
-        .coordinates {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            z-index: 999;
         }
     </style>
 </head>
 <body>
-
-    <h1>Interactive Map of India</h1>
+    
     <div id="map"></div>
 
-    <!-- Coordinates display box (optional) -->
-    <div id="coordinates" class="coordinates"></div>
-
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-        // Initialize the map and set view to India
-        var map = L.map('map').setView([20.5937, 78.9629], 5); // India centered with zoom level 5
-
-        // Set up the tile layer (OpenStreetMap)
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        // Array of places with coordinates for markers
-        var places = [
-            { name: "New Delhi", lat: 28.6139, lon: 77.2090, description: "Capital of India" },
-            { name: "Mumbai", lat: 19.0760, lon: 72.8777, description: "Financial Capital of India" },
-            { name: "Kolkata", lat: 22.5726, lon: 88.3639, description: "Cultural Capital of India" },
-            { name: "Chennai", lat: 13.0827, lon: 80.2707, description: "Gateway to South India" },
-            { name: "Bangalore", lat: 12.9716, lon: 77.5946, description: "Silicon Valley of India" }
-        ];
-
-        // Add markers for each place
-        places.forEach(function(place) {
-            var marker = L.marker([place.lat, place.lon]).addTo(map);
-            marker.bindPopup("<b>" + place.name + "</b><br>" + place.description);
-        });
-
-        // Handle click event to add a marker dynamically and show coordinates
-        map.on('click', function(e) {
-            var lat = e.latlng.lat;
-            var lon = e.latlng.lng;
-
-            // Add a marker where the user clicked
-            var marker = L.marker([lat, lon]).addTo(map);
-
-            // Display coordinates in popup
-            marker.bindPopup("<b>You clicked here!</b><br>Latitude: " + lat.toFixed(4) + "<br>Longitude: " + lon.toFixed(4)).openPopup();
-
-            // Update coordinates display box
-            document.getElementById('coordinates').innerHTML = "Latitude: " + lat.toFixed(4) + ", Longitude: " + lon.toFixed(4);
-        });
-
-        // Zoom control (this is optional since Leaflet provides a default zoom UI)
-        var zoomControl = L.control.zoom({
-            position: 'topright'
-        }).addTo(map);
-
+    
+    <script 
+        src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js">
     </script>
+    <script>
+        
+        var map = L.map('map').setView([20.5937, 78.9629], 5); 
 
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        
+        var marker = L.marker([28.6139, 77.2090]).addTo(map); 
+        marker.bindPopup("<b>New Delhi</b><br>Capital of India").openPopup();
+
+        // Add a circle
+        var circle = L.circle([19.0760, 72.8777], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5,
+            radius: 50000
+        }).addTo(map);
+        circle.bindPopup("Mumbai Area");
+
+      
+        var polygon = L.polygon([
+            [13.0827, 80.2707], 
+            [17.3850, 78.4867], 
+            [12.9716, 77.5946]  
+        ]).addTo(map);
+        polygon.bindPopup("Southern Cities");
+
+       
+        function onMapClick(e) {
+            alert("You clicked at " + e.latlng);
+        }
+        map.on('click', onMapClick);
+    </script>
 </body>
 </html>
